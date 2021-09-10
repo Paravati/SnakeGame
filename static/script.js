@@ -1,6 +1,7 @@
 var myGamePiece;
 var w = 680;
 var h = 480;
+var direction = "RIGHT" //default direction is right
 
 function startGame() {
     myGamePiece = new component(30, 30, "blue", 10, 120);
@@ -53,19 +54,43 @@ function updateGameArea() {
 function moveup() {
     myGamePiece.speedY -= 1;
     myGamePiece.speedX = 0;  //to prevent diagonal moves
+    direction = "UP";
 }
 
 function movedown() {
     myGamePiece.speedY += 1;
     myGamePiece.speedX = 0;  //to prevent diagonal moves
+    direction = "DOWN";
 }
 
 function moveleft() {
     myGamePiece.speedX -= 1;
     myGamePiece.speedY = 0;  //to prevent diagonal moves
+    direction = "LEFT";
 }
 
 function moveright() {
     myGamePiece.speedX += 1;
     myGamePiece.speedY = 0;  //to prevent diagonal moves
+    direction = "RIGHT";
 }
+
+//document.addEventListener('keydown',direction);
+window.addEventListener('keydown',
+function direction(event){
+    let key = event.keyCode;
+    if( key == 37 && direction != "RIGHT"){
+        moveleft();
+        direction = "LEFT";
+    }else if(key == 38 && direction != "DOWN"){
+        direction = "UP";
+        moveup();
+    }else if(key == 39 && direction != "LEFT"){
+        direction = "RIGHT";
+        moveright();
+    }else if(key == 40 && direction != "UP"){
+        direction = "DOWN";
+        movedown();
+    }
+}
+)
