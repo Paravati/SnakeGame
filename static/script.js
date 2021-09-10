@@ -1,15 +1,17 @@
 var myGamePiece;
+var w = 680;
+var h = 480;
 
 function startGame() {
-    myGamePiece = new component(30, 30, "red", 10, 120);
+    myGamePiece = new component(30, 30, "blue", 10, 120);
     myGameArea.start();
 }
 
 var myGameArea = {
     canvas : document.createElement("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
+        this.canvas.width = w;
+        this.canvas.height = h;
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.interval = setInterval(updateGameArea, 20);
@@ -34,6 +36,11 @@ function component(width, height, color, x, y) {
     this.newPos = function() {
         this.x += this.speedX;
         this.y += this.speedY;
+        if(this.x > myGameArea.canvas.width) this.x = 0;
+        else if(this.x <0 ) this.x = myGameArea.canvas.width;
+        if(this.y > myGameArea.canvas.height) this.y=0;
+        else if(this.y <0 ) this.y = myGameArea.canvas.height;
+
     }
 }
 
@@ -45,16 +52,20 @@ function updateGameArea() {
 
 function moveup() {
     myGamePiece.speedY -= 1;
+    myGamePiece.speedX = 0;  //to prevent diagonal moves
 }
 
 function movedown() {
     myGamePiece.speedY += 1;
+    myGamePiece.speedX = 0;  //to prevent diagonal moves
 }
 
 function moveleft() {
     myGamePiece.speedX -= 1;
+    myGamePiece.speedY = 0;  //to prevent diagonal moves
 }
 
 function moveright() {
     myGamePiece.speedX += 1;
+    myGamePiece.speedY = 0;  //to prevent diagonal moves
 }
