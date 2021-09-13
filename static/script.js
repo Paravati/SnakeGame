@@ -2,9 +2,13 @@ var myGamePiece;
 var w = 680;
 var h = 480;
 var direction = "RIGHT" //default direction is right
+var pos_x = Math.ceil(Math.random()*w);
+var pos_y = Math.ceil(Math.random()*h);
 
 function startGame() {
     myGamePiece = new component(30, 30, "blue", 10, 120);
+    snack = new component(20, 20, "static/img/food.png", pos_x, pos_y, "image");
+//    snack = new component(20, 20, "green", pos_x, pos_y);
     myGameArea.start();
 }
 
@@ -19,20 +23,31 @@ var myGameArea = {
     },
     clear : function() {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-    }
+    },
 }
 
-function component(width, height, color, x, y) {
+function component(width, height, color, x, y, type="") {
     this.width = width;
     this.height = height;
+    if (type == "image") {
+    this.image = new Image();
+    this.image.src = color;
+  }
     this.speedX = 0;
     this.speedY = 0;
     this.x = x;
     this.y = y;
     this.update = function() {
         ctx = myGameArea.context;
-        ctx.fillStyle = color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
+        if (type == "image") {
+            ctx.drawImage(this.image,
+            this.x,
+            this.y,
+            this.width, this.height);
+        } else {
+            ctx.fillStyle = color;
+            ctx.fillRect(this.x, this.y, this.width, this.height);
+        }
     }
     this.newPos = function() {
         this.x += this.speedX;
@@ -43,34 +58,46 @@ function component(width, height, color, x, y) {
         else if(this.y <0 ) this.y = myGameArea.canvas.height;
 
     }
+//    this.clear = function(element){
+//        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+//    }
 }
 
 function updateGameArea() {
     myGameArea.clear();
+    snack.update();
     myGamePiece.newPos();
     myGamePiece.update();
+    if (myGamePiece.x > snack.x && myGamePiece.y > snack.y ){
+//        snack.clear();
+        console.log("eaten");
+        pos_x = Math.ceil(Math.random()*w);
+        pos_y = Math.ceil(Math.random()*h);
+        snack = new component(20, 20, "static/img/food.png", pos_x, pos_y, "image");
+    }
+//    myGameArea.addSnacks()
 }
 
 function moveup() {
-    myGamePiece.speedY -= 1;
+    myGamePiece.speedY = -1;  //-=1
     myGamePiece.speedX = 0;  //to prevent diagonal moves
     direction = "UP";
 }
 
 function movedown() {
-    myGamePiece.speedY += 1;
+    myGamePiece.speedY = 1;  //+=1
     myGamePiece.speedX = 0;  //to prevent diagonal moves
     direction = "DOWN";
 }
 
 function moveleft() {
-    myGamePiece.speedX -= 1;
+    myGamePiece.speedX = -1;  //-=1
     myGamePiece.speedY = 0;  //to prevent diagonal moves
     direction = "LEFT";
 }
 
 function moveright() {
-    myGamePiece.speedX += 1;
+    myGamePiece.speedX = 1;  //+=1
     myGamePiece.speedY = 0;  //to prevent diagonal moves
     direction = "RIGHT";
 }
