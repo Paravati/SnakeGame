@@ -1,3 +1,4 @@
+var snake = new Array();
 var myGamePiece;
 var w = 680;
 var h = 480;
@@ -7,6 +8,8 @@ var pos_y = Math.ceil(Math.random()*h);
 
 function startGame() {
     myGamePiece = new component(30, 30, "blue", 10, 120);
+    snake.push(myGamePiece);
+    console.log(snake);
     snack = new component(20, 20, "static/img/food.png", pos_x, pos_y, "image");
 //    snack = new component(20, 20, "green", pos_x, pos_y);
     myGameArea.start();
@@ -47,6 +50,9 @@ function component(width, height, color, x, y, type="") {
         } else {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
+            ctx.strokestyle = "black";
+            ctx.strokeRect(this.x, this.y, this.width, this.height);
+
         }
     }
     this.newPos = function() {
@@ -58,24 +64,44 @@ function component(width, height, color, x, y, type="") {
         else if(this.y <0 ) this.y = myGameArea.canvas.height;
 
     }
-//    this.clear = function(element){
-//        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
-//    }
+}
+
+function snakeGrowth(){
+    var newPiece = new component(30, 30, "pink", snake[0].x-30, snake[0].y);
+    newPiece.speedX = snake[0].speedX;
+    newPiece.speedY = snake[0].speedY;
+    console.log("snake is growing")
+    snake.push(newPiece);
+    console.log(snake);
+
 }
 
 function updateGameArea() {
     myGameArea.clear();
     snack.update();
-    myGamePiece.newPos();
-    myGamePiece.update();
-    if (myGamePiece.x > snack.x && myGamePiece.y > snack.y ){
-//        snack.clear();
-        console.log("eaten");
-        pos_x = Math.ceil(Math.random()*w);
-        pos_y = Math.ceil(Math.random()*h);
-        snack = new component(20, 20, "static/img/food.png", pos_x, pos_y, "image");
+//    snake[0].newPos();
+//    snake[0].update();
+    for(let i =0;i<snake.length; i++){
+        snake[i].newPos();
+        snake[i].update();
     }
-//    myGameArea.addSnacks()
+    if (snake[0].x > snack.x && snake[0].y > snack.y ){
+    snakeGrowth();
+    console.log("eaten");
+    pos_x = Math.ceil(Math.random()*w);
+    pos_y = Math.ceil(Math.random()*h);
+    snack = new component(20, 20, "static/img/food.png", pos_x, pos_y, "image");
+    }
+//    myGamePiece.newPos();
+//    myGamePiece.update();
+//    if (myGamePiece.x > snack.x && myGamePiece.y > snack.y ){
+//        var piece = snakeGrowth();
+//        piece.update();
+//        console.log("eaten");
+//        pos_x = Math.ceil(Math.random()*w);
+//        pos_y = Math.ceil(Math.random()*h);
+//        snack = new component(20, 20, "static/img/food.png", pos_x, pos_y, "image");
+//    }
 }
 
 function moveup() {
