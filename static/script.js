@@ -94,10 +94,11 @@ function snakeGrowth(){
 function updateGameArea() {
     myGameArea.clear();
     if (snack!==undefined){
-    snack.update();
+        snack.update();
     }
     for(let i =0;i<snake.length; i++){
-        if ( snake.length>1 && snake[1].x == changeMovementCoordinates[0] && snake[1].y == changeMovementCoordinates[1]){
+        if ( i>=1 && snake[i].x == changeMovementCoordinates[0] && snake[i].y == changeMovementCoordinates[1]){
+            console.log("test funkcji")
             if (snake[i-1].move_direction === "DOWN"){
                 movedown(snake[i]);
             }else if(snake[i-1].move_direction === "UP"){
@@ -107,20 +108,25 @@ function updateGameArea() {
             }else if(snake[i-1].move_direction === "LEFT"){
                 moveleft(snake[i]);
             }
+            if (i === snake.length-1){
+                changeMovementCoordinates = [-1, -1];
             }
+//            changeMovementCoordinates = [-1, -1];
+        }
+        console.log(snake.length);
         snake[i].newPos();
         snake[i].update();
+
 //        console.log(snake[i].move_direction);
     }
-    console.log(eating);
-    if (eating===0 && snake[0].x > snack.x && snake[0].x < snack.x+pixelLen && snake[0].y > snack.y && snake[0].y < snack.y+pixelLen){
+    if (eating===0 && snake[0].x > snack.x-pixelLen && snake[0].x < snack.x+pixelLen && snake[0].y > snack.y-pixelLen && snake[0].y < snack.y+pixelLen){
         snack=undefined;
         eating = 1; // flag which prevents errors caused by eating fruit by another parts ->
         snakeGrowth();
         console.log("eaten");
 //        pos_x = Math.ceil(Math.random()*(w-pixelLen));
 //        pos_y = Math.ceil(Math.random()*(h-pixelLen));
-        pos_x = Math.ceil(Math.random()*40)*pixelLen;
+        pos_x = Math.ceil(Math.random()*30)*pixelLen;
         pos_y = Math.ceil(Math.random()*20)*pixelLen;
         snack = new component(pixelLen, pixelLen, "static/img/food.png", pos_x, pos_y, "image");
         console.log(pos_x + " " + pos_y);
@@ -168,22 +174,22 @@ function direction(event){
         changeMovementCoordinates = [snake[0].x, snake[0].y];
         moveleft(snake[0]);
         direction = "LEFT";
-        changeMovementCoordinates = [-1, -1];
+//        changeMovementCoordinates = [-1, -1];
     }else if(key == 38 && direction != "DOWN"){
         changeMovementCoordinates = [snake[0].x, snake[0].y];
         moveup(snake[0]);
         direction = "UP";
-        changeMovementCoordinates = [-1, -1];
+//        changeMovementCoordinates = [-1, -1];
     }else if(key == 39 && direction != "LEFT"){
         changeMovementCoordinates = [snake[0].x, snake[0].y];
         moveright(snake[0]);
         direction = "RIGHT";
-        changeMovementCoordinates = [-1, -1];
+//        changeMovementCoordinates = [-1, -1];
     }else if(key == 40 && direction != "UP"){
         changeMovementCoordinates = [snake[0].x, snake[0].y];
         movedown(snake[0]);
         direction = "DOWN";
-        changeMovementCoordinates = [-1, -1];
+//        changeMovementCoordinates = [-1, -1];
     }
 }
 )
